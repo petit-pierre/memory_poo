@@ -8,25 +8,41 @@
 </head>
 
 <body>
-    <div class='game-board'>
+    <form method="post" class='game-board'>
         <?php
-        require_once 'Card.php';
-        $deck = [];
-        $pairs = 8;
-        for ($i = 1; $i <= $pairs; $i++) {
-            $imagePath = "./assets/card" . $i . ".png";
-            $deck[] = new Card($i * 2 - 1, $imagePath);
-            $deck[] = new Card($i * 2, $imagePath);
-        }
-        shuffle($deck);
         session_start();
+        require_once 'Card.php';
+        if (!isset($_SESSION['deck'])) {
+            $deck = [];
+            $pairs = 8;
+            for ($i = 1; $i <= $pairs; $i++) {
+                $imagePath = "./assets/card" . $i . ".png";
+                $deck[] = serialize(new Card($i * 2 - 1, $imagePath));
+                $deck[] = serialize(new Card($i * 2, $imagePath));
+            }
+            shuffle($deck);
+            $_SESSION['deck'] = $deck;
+        };
+
+
+        $deck = ($_SESSION['deck']);
+        var_dump($_POST);
+
+
+
         foreach ($deck as $card) {
-            echo "<div class='card'>
-            <img src='" . $card->getImage() . "' alt='Card Image'>
-            </div>";
+            if ($card['flipped'] || $card['matched']) {
+                echo "<button type='submit' class='card'>
+                <img src='" . $card['image'] . "' alt='Card Image'>
+                </button>";
+            } else {
+                echo "<button type='submit' class='card' name='cardId' value='" . $card['id'] . "'>
+                <img src='./assets/backside.png' alt='Card Back'>
+                </button>";
+            }
         }
 
 
         ?>
-    </div>
+    </form>
 </body>
