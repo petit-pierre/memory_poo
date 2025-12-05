@@ -26,11 +26,22 @@
 
 
         $deck = ($_SESSION['deck']);
-        var_dump($_POST);
+
+        if (isset($_POST['cardId'])) {
+            for ($i = 0; $i < count($deck); $i++) {
+                if (in_array($_POST['cardId'], $deck[$i])) {
+
+
+                    $deck[$i]['flipped'] = true;
+                    $_SESSION['deck'] = $deck;
+                }
+            }
+        }
 
 
 
         foreach ($deck as $card) {
+            //var_dump($card);
             if ($card['flipped'] || $card['matched']) {
                 echo "<button type='submit' class='card'>
                 <img src='" . $card['image'] . "' alt='Card Image'>
