@@ -30,11 +30,17 @@
         if (isset($_POST['cardId'])) {
             for ($i = 0; $i < count($deck); $i++) {
                 if (in_array($_POST['cardId'], $deck[$i])) {
-
-
                     $deck[$i]['flipped'] = true;
                     $_SESSION['deck'] = $deck;
-                }
+                    $flippedCard = $deck[$i]['image'];
+                    //var_dump($flippedCard);
+                    for ($j = 0; $j < count($deck); $j++) {
+                        if ($deck[$j]['image'] === $flippedCard) {
+                            $deck[$j]['matched'] = true;
+                            $_SESSION['deck'] = $deck;
+                        }
+                    }
+                };
             }
         }
 
