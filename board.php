@@ -25,12 +25,12 @@
             $_SESSION['turn'] = true;
         };
         $allMatched = true;
+        $deck = ($_SESSION['deck']);
         foreach ($deck as $card) {
             if ($card->matched === false) {
                 $allMatched = false;
             }
         }
-        $deck = ($_SESSION['deck']);
 
 
 
