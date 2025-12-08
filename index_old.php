@@ -22,38 +22,52 @@
             }
             shuffle($deck);
             $_SESSION['deck'] = $deck;
+            $_SESSION['turn'] = true;
         };
 
 
         $deck = ($_SESSION['deck']);
-
+        $allMatched = false;
         if (isset($_POST['cardId'])) {
             for ($i = 0; $i < count($deck); $i++) {
                 if ($deck[$i]->getId() == $_POST['cardId']) {
                     $deck[$i]->flipped = true;
-                    $_SESSION['deck'] = $deck;
                     $flippedCard = $deck[$i]->getImage();
                     for ($j = 0; $j < count($deck); $j++) {
-                        if ($deck[$j]->getImage() === $flippedCard) {
+                        if ($i !== $j && $deck[$j]->getImage() === $flippedCard  && $deck[$j]->flipped === true && $_SESSION['turn'] === false) {
                             $deck[$j]->matched = true;
-                            $_SESSION['deck'] = $deck;
+                            $deck[$i]->matched = true;
                         }
                     }
+                } elseif ($_SESSION['turn']) {
+                    $deck[$i]->flipped = false;
+                }
+            }
+            $_SESSION['turn'] = !$_SESSION['turn'];
+            $_SESSION['deck'] = $deck;
+            $allMatched = true;
+            foreach ($deck as $card) {
+                if ($card->matched === false) {
+                    $allMatched = false;
                 }
             }
         }
-
-
-
-        foreach ($deck as $card) {
-            if ($card->flipped || $card->matched) {
-                echo "<button type='submit' class='card'>
+        if ($allMatched) {
+            echo "<div><h2>Félicitations ! Vous avez gagné !</h2><button type='submit' class='restart'>Recommencer</button></div>";
+            unset($_SESSION['deck']);
+            unset($_SESSION['turn']);
+            echo "";
+        } else {
+            foreach ($deck as $card) {
+                if ($card->flipped || $card->matched) {
+                    echo "<div class='card'>
                 <img src='" . $card->getImage() . "' alt='Card Image'>
-                </button>";
-            } else {
-                echo "<button type='submit' class='card' name='cardId' value='" . $card->getId() . "'>
+                </div>";
+                } else {
+                    echo "<button type='submit' class='card' name='cardId' value='" . $card->getId() . "'>
                 <img src='./assets/backside.png' alt='Card Back'>
                 </button>";
+                }
             }
         }
 

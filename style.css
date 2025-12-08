@@ -4,4 +4,20 @@
   flex-direction: row;
   gap: 20px;
   justify-content: space-around;
+}
+.game-board button {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
+.game-board .card {
+  width: 10vw;
+}
+.game-board .card img {
+  width: 100%;
+  height: auto;
 }/*# sourceMappingURL=style.css.map */
